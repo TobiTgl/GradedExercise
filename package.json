@@ -8,19 +8,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TobiTgl/GradedExercise.git"
+    "url": "git+https://github.com/lassehav-oamk/api-authentications-demos.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TobiTgl/GradedExercise.git/issues"
+    "url": "https://github.com/lassehav-oamk/api-authentications-demos/issues"
   },
-  "homepage": "https://github.com/TobiTgl/GradedExercise.git",
+  "homepage": "https://github.com/lassehav-oamk/api-authentications-demos#readme",
   "dependencies": {
+    "ajv": "^7.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
+    "chai-json-schema-ajv": "^5.2.3",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.3.0",
+    "multer": "^1.4.2",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "passport-jwt": "^4.0.0",

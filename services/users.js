@@ -10,7 +10,7 @@ let users = [
   },
   {
     id: 2,
-    username: "johndoe",
+    username: "johntho",
     email: 'john@mail.com',
     password: '$2y$06$eQav1OaIyWSUnlvPSaFXRe5gWRqXd.s9vac1SV1GafxAr8hdmsgCy', // johndoepassword
     validApiKey: null
