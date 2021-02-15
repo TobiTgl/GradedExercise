@@ -21,7 +21,7 @@ describe('Demonstration of tests', function() {
       server.close();
     })
 
-    describe('Testing route /', function() {
+    describe('Testing route GET /', function() {
 
         it('Should return successfull response', async function() {
     
@@ -37,7 +37,7 @@ describe('Demonstration of tests', function() {
         })
       })
 
-describe('User registration tests', function() {
+describe('User registration tests (Route POST /register)', function() {
     it('should reject (status 400) the request if fields are missing', async function() {
       await chai.request(apiAddress)
         .post('/register')
@@ -129,7 +129,7 @@ describe('User registration tests', function() {
     })
   })
 
-  describe('Getting postings Test', function() {
+  describe('Getting postings Test (Route GET /items)', function() {
 
     it('Should return successfull response with all postings', async function() {
 
@@ -215,15 +215,12 @@ describe('User registration tests', function() {
       })
   })
 
-  describe('User login tests', function() {
+  describe('User login tests (Route POST /login)', function() {
 
     it('should accept user login when correct username and password', async function() {
         await chai.request(apiAddress)
           .post('/login')
-          .send({
-            username: "tester",
-            password: "testerpassword"  
-          })
+          .set({"Authorization": 'Basic dGVzdGVyOnRlc3RlcnBhc3N3b3Jk'})
           .then(response => {
             expect(response.status).to.equal(200);
           })
@@ -254,8 +251,9 @@ describe('User registration tests', function() {
 
     
 })
-/*
-describe('Creating posts test', function() {
+
+
+describe('Creating posts test (Route POST /items)', function() {
 
     it('should let logged in user create posting', async function() {
         await chai.request(apiAddress)
@@ -264,7 +262,15 @@ describe('Creating posts test', function() {
           .field('Content-Type', 'multipart/form-data')
           .field('title', 'titletest')
           .field('category','test')
-          .attach('images', '../uploads/skinedit12.png', 'skinedit12.png')
+          .field('id','testid')
+          .field('userId','testuserId')
+          .field('price','200')
+          .field('date','2020-01-25T00:00:00')
+          .field('deliveryType','testdelivery')
+          .field('sellerUsername','testusername')
+          .field('sellerContact','testcontact')
+          .field('location','testlocation')
+          .attach('images', 'C:/Users/tobia/Documents/mobileapplications/gradedexerciseAPI/uploads/skinedit12.png', 'skinedit12.png')
           .then(response => {
             expect(response.status).to.equal(201);
           })
@@ -272,11 +278,87 @@ describe('Creating posts test', function() {
             throw error
           });
   
+        })
 
+        it('should return 400 when field is missing e.g. price', async function() {
+            await chai.request(apiAddress)
+              .post('/items')
+              .set({ "Authorization": `Bearer ${token}` })
+              .field('Content-Type', 'multipart/form-data')
+              .field('title', 'titletest')
+              .field('category','test')
+              .field('id','testid')
+              .field('userId','testuserId')
+              .field('date','2020-01-25T00:00:00')
+              .field('deliveryType','testdelivery')
+              .field('sellerUsername','testusername')
+              .field('sellerContact','testcontact')
+              .field('location','testlocation')
+              .attach('images', 'C:/Users/tobia/Documents/mobileapplications/gradedexerciseAPI/uploads/skinedit12.png', 'skinedit12.png')
+              .then(response => {
+                expect(response.status).to.equal(400);
+              })
+              .catch(error => {
+                throw error
+              });
+      
+            })
 })
-*/
 
-describe('Delete postings', function() {
+describe('Editing postings test (Route PUT /items/:id)', function() {
+
+    it('should let logged in user edit own postings', async function() {
+        await chai.request(apiAddress)
+          .put('/items/1')
+          .set({ "Authorization": `Bearer ${token}` })
+          .field('Content-Type', 'multipart/form-data')
+          .field('title', 'titletestnew')
+          .field('category','testnew')
+          .field('id','testidnew')
+          .field('userId', 3)
+          .field('price', 200)
+          .field('date','2020-01-25T00:00:01')
+          .field('deliveryType','testdeliverynew')
+          .field('sellerUsername','testusernamenew')
+          .field('sellerContact','testcontactnew')
+          .field('location','testlocationnew')
+          .attach('images', 'C:/Users/tobia/Documents/mobileapplications/gradedexerciseAPI/uploads/skinedit12.png', 'skinedit12.png')
+          .then(response => {
+            expect(response.status).to.equal(201);
+          })
+          .catch(error => {
+            throw error
+          });
+  
+        })
+
+        it('should return 400 when field is missing e.g. category', async function() {
+            await chai.request(apiAddress)
+              .put('/items/1')
+              .set({ "Authorization": `Bearer ${token}` })
+              .field('Content-Type', 'multipart/form-data')
+              .field('title', 'titletestnew')
+              .field('id','testidnew')
+              .field('userId', 3)
+              .field('price', 200)
+              .field('date','2020-01-25T00:00:01')
+              .field('deliveryType','testdeliverynew')
+              .field('sellerUsername','testusernamenew')
+              .field('sellerContact','testcontactnew')
+              .field('location','testlocationnew')
+              .attach('images', 'C:/Users/tobia/Documents/mobileapplications/gradedexerciseAPI/uploads/skinedit12.png', 'skinedit12.png')
+              .then(response => {
+                expect(response.status).to.equal(400);
+              })
+              .catch(error => {
+                throw error
+              });
+      
+            })
+})
+
+
+describe('Delete postings (Route DELETE /items/:id)', function() {
 
     it('should let logged in user delete posting', async function() {
         await chai.request(apiAddress)

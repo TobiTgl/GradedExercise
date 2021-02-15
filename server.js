@@ -99,7 +99,7 @@ app.post('/register',
 
 //login
 app.post('/login', passport.authenticate('basic', {session: false}), (req, res)=>{
-  console.log('test');
+  //console.log('test');
   res.sendStatus(200);
 })
 
@@ -108,21 +108,23 @@ app.post('/items',
   passport.authenticate('jwt', { session: false }),  multerUpload.any('testFile'),
   (req, res) => {
 
-    console.log(req.files);
+    //console.log(req.files);
 
     req.files.forEach(f => {
       fs.renameSync(f.path, './uploads/' + f.originalname)
     })
 
-    console.log('POST /items');
-    console.log(req.body);
+    //console.log('POST /items');
+    //console.log(req.body);
     if(('category' in req.body) && ( 'title' in req.body)&& ( 'path' in req.files[0])&& ( 'price' in req.body)&& ( 'date' in req.body)&& ( 'deliveryType' in req.body)&& ( 'sellerUsername' in req.body)&& ( 'sellerContact' in req.body)&& ( 'location' in req.body)) {
       req.files.forEach(f => {
         postings.insertPostings(req.body.title, req.body.category,  req.body.userId, f.path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
       
       })
       //postings.insertPostings(req.body.title, req.body.category,  req.body.userId, req.files[0].path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
-      res.json(postings.getAllUserPostings(req.user.id));
+      res.sendStatus(201);
+      //res.json(postings.getAllUserPostings(req.user.id));
+      
     }
     else {
       res.sendStatus(400);
@@ -226,10 +228,11 @@ app.put('/items/:id', multerUpload.any('testFile'), (req, res) => {
     fs.renameSync(f.path, './uploads/' + f.originalname)
   })
 
-  console.log('PUT /items');
-  console.log(req.body);
+  //console.log('PUT /items');
+  //console.log(req.body);
   
   let newData = {
+    id: req.params.id,
     title: req.body.title, 
     category: req.body.category,  
     userId: req.body.userId, 
@@ -249,6 +252,7 @@ app.put('/items/:id', multerUpload.any('testFile'), (req, res) => {
     })
     //postings.insertPostings(req.body.title, req.body.category,  req.body.userId, req.files[0].path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
    // res.json(postings.getAllUserPostings(req.user.id));
+   res.sendStatus(201);
   }
   else {
     res.sendStatus(400);
