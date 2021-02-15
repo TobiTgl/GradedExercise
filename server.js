@@ -13,6 +13,7 @@ const Ajv = require('ajv').default;
 
 app.use(express.json());
 
+let currentUser;
 
 app.get('/', (req, res) => {
     res.status(200);
@@ -28,6 +29,8 @@ passport.use(new BasicStrategy(
   function(username, password, done) {
 
     const user = users.getUserByName(username);
+    currentUser = user.id
+    //console.log(currentUser)
     if(user == undefined) {
       // Username not found
       console.log("HTTP Basic username not found");
@@ -108,7 +111,7 @@ app.post('/items',
   passport.authenticate('jwt', { session: false }),  multerUpload.any('testFile'),
   (req, res) => {
 
-    //console.log(req.files);
+    
 
     req.files.forEach(f => {
       fs.renameSync(f.path, './uploads/' + f.originalname)
@@ -118,7 +121,7 @@ app.post('/items',
     //console.log(req.body);
     if(('category' in req.body) && ( 'title' in req.body)&& ( 'path' in req.files[0])&& ( 'price' in req.body)&& ( 'date' in req.body)&& ( 'deliveryType' in req.body)&& ( 'sellerUsername' in req.body)&& ( 'sellerContact' in req.body)&& ( 'location' in req.body)) {
       req.files.forEach(f => {
-        postings.insertPostings(req.body.title, req.body.category,  req.body.userId, f.path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
+        postings.insertPostings(req.body.title, req.body.category,  currentUser, f.path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
       
       })
       //postings.insertPostings(req.body.title, req.body.category,  req.body.userId, req.files[0].path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
@@ -216,8 +219,24 @@ app.get('/items', (req, res) => {
 
 });
 
+//Get single item from
+
+app.get('/items/:id', (req, res) => {
+           
+      const t = postings.getSinglePostings(req.params.id);
+      res.json(t);
+  
+  });
+
 
 //get user/{userId} warscheinlich nicht benötigt 
+
+app.get('/users/:id', (req, res) => {
+           
+    const t = users.getUser(req.params.id);
+    res.json(t);
+
+});
 
 
 //put items/{itemId}

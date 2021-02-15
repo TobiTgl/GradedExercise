@@ -39,6 +39,7 @@ module.exports = {
 
     return user.validApiKey;
   },
+  getUser: (userId) => users.find(u => u.id == userId),
   getUserWithApiKey: (apiKey) => users.find(u => u.validApiKey == apiKey),
   addUser: (username, email, password) => {
     users.push({

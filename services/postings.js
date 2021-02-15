@@ -36,6 +36,7 @@ module.exports = {
   },
 
   getAllPostings: () => postings,
+  getSinglePostings: (id) => postings.filter(t => t.id == id),
   getAllUserPostings: (userId) => postings.filter(t => t.userId == userId),
   getPostings: (postingsId) => postings.find(t => t.id == postingsId),
   deletePostings: (postingId) => postings = postings.filter(t => t.id != postingId),
