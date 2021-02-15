@@ -409,9 +409,8 @@ let serverInstance = null;
 
 module.exports = {
   start: function() {
-    serverInstance = app.listen(port, () => {
-      console.log(`Example app listening at http://localhost:${port}`)
-    })
+    serverInstance =  app.listen(process.env.PORT || 4000)
+    
   },
   close: function() {
     serverInstance.close();
