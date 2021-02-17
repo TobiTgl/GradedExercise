@@ -21,9 +21,6 @@ const storage = multer.diskStorage({
     }
   })
   
-
-var cloudinarySecret = require('./cloudinary.json')
-
 app.use(express.json());
 
 let currentUser;
@@ -208,9 +205,9 @@ app.post('/items',
         // SEND FILE TO CLOUDINARY
         const cloudinary = require('cloudinary').v2
         cloudinary.config({
-          cloud_name: cloudinarySecret.cloudname,
-          api_key: cloudinarySecret.APIKey,
-          api_secret: cloudinarySecret.APISecret
+            cloud_name: process.env.cloudname,
+            api_key: process.env.APIKey,
+            api_secret: process.env.APISecret
         })
         
         const path = req.files[0].path
