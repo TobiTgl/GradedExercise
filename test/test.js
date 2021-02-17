@@ -6,8 +6,7 @@ const apiAddress = "http://localhost:4000";
 const server = require('../server');
 const exampleJsonSchema = require('./schemas/users.json');
 const userCreatedSchema = require('./schemas/userCreated.json');
-let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJlbWFpbCI6ImpvaG5AbWFpbC5jb20ifSwiaWF0IjoxNjEzMzQwNzkwLCJleHAiOjE2MTM0MjcxOTB9.sylgjS45JNfiL4_GGOAMMfYDnMzSJ7_KWKweQOvet_s'
-
+let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyLCJlbWFpbCI6ImpvaG5AbWFpbC5jb20ifSwiaWF0IjoxNjEzNTU2MTMxLCJleHAiOjE2MTM2NDI1MzF9.JxPHJdtoIwX5yjOcMuxm43aePLrWfmpVWzDWB97hzAg'
 
 describe('Demonstration of tests', function() {
     before(function () {

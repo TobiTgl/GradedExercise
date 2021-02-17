@@ -10,6 +10,18 @@ const users = require('./services/users');
 const port = 4000;
 const exampleJsonSchema = require('./test/schemas/users.json');
 const Ajv = require('ajv').default;
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function(req, file, cb) {
+      console.log(file)
+      cb(null, file.originalname)
+    }
+  })
+  
+
+var cloudinarySecret = require('./cloudinary.json')
 
 app.use(express.json());
 
@@ -107,9 +119,127 @@ app.post('/login', passport.authenticate('basic', {session: false}), (req, res)=
 })
 
 //post items 
+app.post('/uploadCloudinary', (req, res, next) => {
+    const upload = multer({ storage }).single('images')
+    upload(req, res, function(err) {
+      if (err) {
+        return res.send(err)
+      }
+      console.log('file uploaded to server')
+      console.log(req.file)
+  
+      // SEND FILE TO CLOUDINARY
+      const cloudinary = require('cloudinary').v2
+      cloudinary.config({
+        cloud_name: cloudinarySecret.cloudname,
+        api_key: cloudinarySecret.APIKey,
+        api_secret: cloudinarySecret.APISecret
+      })
+      
+      const path = req.file.path
+      const uniqueFilename = new Date().toISOString()
+  
+      cloudinary.uploader.upload(
+        path,
+        { public_id: `${req.file.filename}`, tags: `blog` }, // directory and tags are optional
+        function(err, image) {
+          if (err) return res.send(err)
+          console.log('file uploaded to Cloudinary')
+          // remove file from server
+          const fs = require('fs')
+          fs.unlinkSync(path)
+          // return image details
+          res.json(image)
+        console.log(uniqueFilename)
+        }
+      )
+    })
+  })
+
 app.post('/items', 
   passport.authenticate('jwt', { session: false }),  multerUpload.any('testFile'),
   (req, res) => {
+
+    let filetype = req.files[0].mimetype
+
+    let filetypeCut = filetype.substr(6, filetype.length)
+
+    //console.log(filetypeCut)
+
+    let url = 'https://res.cloudinary.com/tobitgl/image/upload/v1613488845/' + req.files[0].filename + '.' + filetypeCut
+
+    //console.log(url)
+    
+/*
+       req.files.forEach(f => {
+      fs.renameSync(f.path, './uploads/' + f.originalname)
+    })
+*/
+    //console.log('POST /items');
+    //console.log(req.body);
+    if(('category' in req.body) && ( 'title' in req.body)&& ( 'path' in req.files[0])&& ( 'price' in req.body)&& ( 'date' in req.body)&& ( 'deliveryType' in req.body)&& ( 'sellerUsername' in req.body)&& ( 'sellerContact' in req.body)&& ( 'location' in req.body)) {
+      req.files.forEach(f => {
+        postings.insertPostings(req.body.title, req.body.category,  currentUser, url, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
+      
+      })
+      //postings.insertPostings(req.body.title, req.body.category,  req.body.userId, req.files[0].path, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
+      //res.sendStatus(201);
+      //res.json(postings.getAllUserPostings(req.user.id));
+      
+    }
+    else {
+      res.sendStatus(400);
+      return
+    }
+
+    //console.log(req.files)
+    //console.log(url)
+    
+    const upload = multer({ storage }).single('images')
+
+    upload(req, res, function(err) {
+        if (err) {
+          return res.send(err)
+        }
+        //console.log('file uploaded to server')
+        //console.log(req.files)
+    
+        // SEND FILE TO CLOUDINARY
+        const cloudinary = require('cloudinary').v2
+        cloudinary.config({
+          cloud_name: cloudinarySecret.cloudname,
+          api_key: cloudinarySecret.APIKey,
+          api_secret: cloudinarySecret.APISecret
+        })
+        
+        const path = req.files[0].path
+        
+        res.sendStatus(201);
+        
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `${req.files[0].filename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+            //console.log('file uploaded to Cloudinary')
+            // remove file from server
+            const fs = require('fs')
+            fs.unlinkSync(path)
+            // return image details
+            //res.json(image)
+          
+          }
+        )
+      })
+
+      
+    
+})
+
+/*
+app.post('/items', 
+  passport.authenticate('jwt', { session: false }),  multerUpload.any('testFile'),
+  (req, res,) => {
 
     
 
@@ -134,6 +264,7 @@ app.post('/items',
     }
     
 })
+*/
 
 
 app.post('/upload', multerUpload.single('testFile'), (req, res) => {
