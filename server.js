@@ -10,6 +10,7 @@ const users = require('./services/users');
 const port = 4000;
 const exampleJsonSchema = require('./test/schemas/users.json');
 const Ajv = require('ajv').default;
+require('dotenv').config()
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
       cb(null, 'uploads/')
@@ -131,9 +132,9 @@ app.post('/uploadCloudinary', (req, res, next) => {
       // SEND FILE TO CLOUDINARY
       const cloudinary = require('cloudinary').v2
       cloudinary.config({
-        cloud_name: cloudinarySecret.cloudname,
-        api_key: cloudinarySecret.APIKey,
-        api_secret: cloudinarySecret.APISecret
+        cloud_name: process.env.cloudname,
+        api_key: process.env.APIKey,
+        api_secret: process.env.APISecret
       })
       
       const path = req.file.path
