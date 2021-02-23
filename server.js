@@ -26,6 +26,8 @@ app.use(cors());
 app.use(express.json());
 
 let currentUser;
+let currentUserName;
+let currentUserEmail;
 
 app.get('/', (req, res) => {
     res.status(200);
@@ -42,6 +44,8 @@ passport.use(new BasicStrategy(
 
     const user = users.getUserByName(username);
     currentUser = user.id
+    currentUserName=user.username
+    currentUserEmail=user.email
     //console.log(currentUser)
     if(user == undefined) {
       // Username not found
