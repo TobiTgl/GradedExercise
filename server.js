@@ -155,9 +155,9 @@ app.post('/items',
 */
     //console.log('POST /items');
     //console.log(req.body);
-    if(('category' in req.body) && ( 'title' in req.body)&& ( 'path' in req.files[0])&& ( 'price' in req.body)&& ( 'date' in req.body)&& ( 'deliveryType' in req.body)&& ( 'sellerUsername' in req.body)&& ( 'sellerContact' in req.body)&& ( 'location' in req.body)) {
+    if(('category' in req.body) && ( 'title' in req.body)&& ( 'path' in req.files[0])&& ( 'price' in req.body)&& ( 'date' in req.body)&& ( 'deliveryType' in req.body)&&( 'location' in req.body)) {
       req.files.forEach(f => {
-        postings.insertPostings(req.body.title, req.body.category,  currentUser, url, req.body.price, req.body.date, req.body.deliveryType, req.body.sellerUsername, req.body.sellerContact, req.body.location);
+        postings.insertPostings(req.body.title, req.body.category,  currentUser, url, req.body.price, req.body.date, req.body.deliveryType, currentUserName, currentUserEmail, req.body.location);
       
       })
       
