@@ -18,6 +18,7 @@ let users = [
 ];
 
 module.exports = {
+  getAllUsers: () => users,
   getUserById: (id) => users.find(u => u.id == id),
   getUserByName: (username) => users.find(u => u.username == username),
   resetApiKey: (userId) => {
