@@ -232,7 +232,7 @@ res.send("Completed");
 
 });
 
-//get items by getPostingsByCategory
+//get items & filtered by category location and date
 
 app.get('/items', (req, res) => {
   
@@ -290,6 +290,13 @@ app.get('/users/:id', (req, res) => {
            
     const t = users.getUser(req.params.id);
     res.json(t);
+
+});
+
+app.get('/users', (req, res) => {
+           
+  const t = users.getAllUsers();
+  res.json(t);
 
 });
 
